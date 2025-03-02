@@ -1,46 +1,57 @@
 package com.drwdom;
 
-import static com.drwdom.constants.TetrisEngineConstants.TEXT_FILE;
+import static com.drwdom.constants.TetrisEngineConstants.GRID_HEIGHT;
+import static com.drwdom.constants.TetrisEngineConstants.GRID_WIDTH;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.drwdom.components.TetrisEngine;
-import com.drwdom.factories.InputReaderFactory;
-import com.drwdom.reader.InputReader;
+import com.drwdom.components.api.IGridHelper;
+import com.drwdom.components.api.ITetrisEngine;
+import com.drwdom.components.impl.GridHelperImpl;
+import com.drwdom.components.impl.TetrisEngineImpl;
+import com.drwdom.model.Grid;
 
 /**
- * The TetrisEngineApplication class is the entry point for the Tetris Engine application.
- * It implements CommandLineRunner to execute the application logic upon startup.
+ * TetrisEngineApplication serves as the entry point for the Tetris Engine application.
+ * <p>
+ * It reads input from STDIN, initializes the necessary components of the Tetris engine,
+ * processes the input, and outputs the resulting grid heights to STDOUT.
+ * </p>
  */
-@SpringBootApplication
-public class TetrisEngineApplication implements CommandLineRunner {
-
-    @Autowired
-    private TetrisEngine tetrisEngine;
-
-    public static void main(String[] args) {
-        SpringApplication.run(TetrisEngineApplication.class, args);
-    }
+public class TetrisEngineApplication {
 
     /**
-     * The run method is executed upon application startup. It reads the input file,
-     * processes the input by applying the pieces to the grid through TetrisEngine, 
-     * and prints the resulting heights as output.
+     * The main method reads input from STDIN, initializes the TetrisEngine components,
+     * processes the input lines, and outputs the resulting grid heights to STDOUT.
      *
-     * @param args the command-line arguments
-     * @throws Exception if an error occurs during execution
+     * @param args Command-line arguments (not used in this implementation).
      */
-    @Override
-    public void run(String... args) throws Exception {
-        InputReader reader = InputReaderFactory.createInputReader(TEXT_FILE);
-        List<String> inputLines = reader.readInput();
-        // Apply the pieces to the grid and get the resulting heights
-        List<String> outputLines = tetrisEngine.applyPiecesToGrid(inputLines);
-        outputLines.forEach(System.out::println);
+    public static void main(String[] args) {
+        try (
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            PrintWriter writer = new PrintWriter(System.out);
+        ) {
+            // Read input lines from STDIN
+            List<String> inputLines = reader.lines().collect(Collectors.toList());
+
+            // Initialize the Tetris engine components using default grid dimensions
+            Grid grid = new Grid(GRID_WIDTH, GRID_HEIGHT);
+            IGridHelper gridHelper = new GridHelperImpl();
+            ITetrisEngine tetrisEngine = new TetrisEngineImpl(grid, gridHelper);
+
+            // Process input lines and calculate the resulting grid heights
+            List<Integer> outputLines = tetrisEngine.applyPiecesToGrid(inputLines);
+
+            // Write the resulting grid heights to STDOUT using PrintWriter
+            outputLines.forEach(writer::println);
+
+        } catch (Exception e) {
+            System.err.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

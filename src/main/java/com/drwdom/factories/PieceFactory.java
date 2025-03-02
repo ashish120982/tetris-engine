@@ -10,17 +10,17 @@ import com.drwdom.model.pieces.TPiece;
 import com.drwdom.model.pieces.ZPiece;
 
 /**
- * Factory class to create Tetris pieces based on the specified shape.
+ * A factory class for creating Tetris piece objects based on their shape and initial column position.
  */
 public class PieceFactory {
 
     /**
-     * Creates a Tetris piece based on the specified shape.
-     * 
-     * @param shape the shape of the Tetris piece
-     * @param column the starting column for the piece
-     * @return the created Tetris piece
-     * @throws IllegalArgumentException if the piece shape is invalid
+     * Creates a Tetris piece object based on the given shape and column position.
+     *
+     * @param shape  The character representing the shape of the Tetris piece (e.g., 'Q', 'Z', etc.).
+     * @param column The initial column position of the piece on the grid.
+     * @return A Piece object corresponding to the given shape.
+     * @throws IllegalArgumentException if the shape is invalid.
      */
     public static Piece createPiece(char shape, int column) {
         return switch (shape) {

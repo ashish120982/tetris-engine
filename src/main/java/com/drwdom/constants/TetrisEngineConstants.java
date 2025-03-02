@@ -1,22 +1,19 @@
 package com.drwdom.constants;
 
 /**
- * Constants used in the Tetris engine.
+ * TetrisEngineConstants contains application-wide constants for the Tetris
+ * Engine, such as grid dimensions and symbols for representing grid cells.
  */
-public class TetrisEngineConstants {
+public final class TetrisEngineConstants {
 
-    /**
-     * Represents an empty cell in the grid.
-     */
-    public static final char EMPTY = '.';
+    private TetrisEngineConstants() {
+        // Private constructor to prevent instantiation
+    }
 
-    /**
-     * The identifier for text file input readers.
-     */
-    public static final String TEXT_FILE = "TextFile";
+    // Grid dimensions for the Tetris game
+    public static final int GRID_WIDTH = 10;  // Standard width for the grid
+    public static final int GRID_HEIGHT = 100;  // Maximum height for the grid
 
-    /**
-     * The default input file name.
-     */
-    public static final String FILE_NAME = "input.txt";
+    // Represents an empty grid cell
+    public static final char EMPTY = '.';  
 }
